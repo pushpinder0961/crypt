@@ -27,7 +27,7 @@ class TicketBlockchain:
         return self.chain[-1]
 
     def issue_ticket(self, buyer_name, event_name):
-        ticket_id = str(uuid.uuid4())  # Generate unique ticket ID
+        ticket_id = str(uuid.uuid4())  # Unique ticket ID
         previous_block = self.get_latest_block()
         new_block = TicketBlock(
             index=previous_block.index + 1,
@@ -49,7 +49,7 @@ class TicketBlockchain:
     def is_chain_valid(self):
         for i in range(1, len(self.chain)):
             current = self.chain[i]
-            previous = self.chain[i - 1]
+            previous = self.chain[i-1]
             if current.hash != current.calculate_hash():
                 return False
             if current.previous_hash != previous.hash:
@@ -62,11 +62,10 @@ class TicketBlockchain:
             print(f"Ticket ID: {block.ticket_id}")
             print(f"Buyer: {block.buyer_name}")
             print(f"Event: {block.event_name}")
-            print(f"Timestamp: {time.ctime(block.timestamp)}")
+            print(f"Issued on: {time.ctime(block.timestamp)}")
             print(f"Hash: {block.hash}")
             print("-" * 50)
 
-# CLI for interaction
 if __name__ == "__main__":
     system = TicketBlockchain()
 
@@ -92,4 +91,21 @@ if __name__ == "__main__":
                 print("✅ Ticket is VALID!")
                 print(f"Buyer: {result.buyer_name}, Event: {result.event_name}, Issued: {time.ctime(result.timestamp)}")
             else:
-                print("❌ Ticket is I
+                print("❌ Ticket is INVALID or not found.")
+
+        elif choice == "3":
+            system.show_all_tickets()
+
+        elif choice == "4":
+            valid = system.is_chain_valid()
+            if valid:
+                print("✅ Blockchain is valid. No tampering detected.")
+            else:
+                print("❌ Blockchain integrity failed. Tampering detected!")
+
+        elif choice == "5":
+            print("👋 Exiting...")
+            break
+
+        else:
+            print("❗ Invalid option. Try again.")
